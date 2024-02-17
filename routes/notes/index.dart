@@ -2,11 +2,14 @@ import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
 
+import '../../common/app_response.dart';
+
 Response onRequest(RequestContext context) {
+  final appResponse = context.read<AppResponse>();
   return switch (context.request.method) {
     HttpMethod.get => _getNotes(),
     HttpMethod.post => _add(),
-    _ => _notFound(),
+    _ => appResponse.notFound(),
   };
 }
 
@@ -33,12 +36,5 @@ Response _getNotes() {
         'description': 'Description 2',
       },
     ],
-  );
-}
-
-Response _notFound() {
-  return Response(
-    statusCode: HttpStatus.notFound,
-    body: 'not found',
   );
 }

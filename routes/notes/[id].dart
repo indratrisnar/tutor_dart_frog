@@ -2,11 +2,14 @@ import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
 
+import '../../common/app_response.dart';
+
 Future<Response> onRequest(RequestContext context, String id) async {
+  final appResponse = context.read<AppResponse>();
   return switch (context.request.method) {
     HttpMethod.patch => await _update(context),
     HttpMethod.delete => _delete(),
-    _ => _notFound(),
+    _ => appResponse.notFound(),
   };
 }
 
@@ -27,12 +30,5 @@ Future<Response> _update(RequestContext context) async {
 Response _delete() {
   return Response.json(
     statusCode: HttpStatus.noContent,
-  );
-}
-
-Response _notFound() {
-  return Response(
-    statusCode: HttpStatus.notFound,
-    body: 'not found',
   );
 }
